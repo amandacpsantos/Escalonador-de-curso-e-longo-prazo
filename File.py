@@ -8,7 +8,7 @@ class File(object):
     def getMultProcess(self):
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
-        if ref_file != None:
+        if ref_file is not None:
             number = ref_file.readline().split('=')[1]
             self.__closeFile(ref_file)
             return number
@@ -19,7 +19,7 @@ class File(object):
         listProcess = []
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
-        if ref_file != None:
+        if ref_file is not None:
 
             #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇAM OS PROCEDIMENTOS
             ref_file.seek(self.__pointerFile[1])
@@ -53,7 +53,7 @@ class File(object):
         listOperation = []
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
-        if ref_file != None:
+        if ref_file is not None:
             #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇA AS OPERAÇÕES
             ref_file.seek(self.__pointerFile[2])
 
@@ -75,7 +75,7 @@ class File(object):
         return None
 
     def createOut(self, nameFileOut=None, listDada=[]):
-        if nameFileOut == None:
+        if nameFileOut is None:
             nameFileOut = self.__nameFileOut
 
         ref_file = open(nameFileOut, 'w+')
@@ -115,7 +115,7 @@ class File(object):
 
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
-        if ref_file != None:
+        if ref_file is not None:
 
             pointB = ref_file.tell()
             line = ref_file.readline()
