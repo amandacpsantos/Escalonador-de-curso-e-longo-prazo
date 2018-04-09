@@ -123,7 +123,7 @@ class File(object):
 
             while line:
                 if "Multiprogramacao" in line:
-                    listPointer.append(pointB);
+                    listPointer.append(pointB)
 
                 elif "Processos" in line:
                     pointB = ref_file.tell()
