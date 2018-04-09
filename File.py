@@ -1,11 +1,8 @@
-import os
-import operator
-
 class File(object):
 
     def __init__(self, nameFileIn=None):
         self.__nameFileIn = str(nameFileIn)
-        self.__nameFileOut = None
+        self.__nameFileOut = "out.txt"
         self.__pointerFile = self.__searchPointerFile()
 
     def getMultProcess(self):
@@ -66,8 +63,31 @@ class File(object):
         self.__closeFile(ref_file)
         return listDataOperation
 
-    def createOut(self, listDate=[]):
-        self.__arqObject.close()
+    def createOut(self, nameFileOut=None, listDada=[]):
+
+        if nameFileOut == None:
+            nameFileOut = self.__nameFileOut
+
+        ref_file = open(nameFileOut, 'w+')
+        ref_file.write("FCFS\n"
+                       "-TE-P1=\n"
+                       "-TE-P2=\n"
+                       "-TE-P3=\n"
+                       "-TE-P4=\n"
+                       "-TME=\n"
+                       "Prioridades-CP\n"
+                       "-TE-P1=\n"
+                       "-TE-P2=\n"
+                       "-TE-P3=\n"
+                       "-TE-P4=\n"
+                       "-TME=\n"
+                       "Round-Robin(20)\n"
+                       "-TE-P1=\n"
+                       "-TE-P2=\n"
+                       "-TE-P3=\n"
+                       "-TE-P4=\n"
+                       "-TME=\n")
+        ref_file.close()
 
     def __openFile(self, nameFile, mode):
         try:
