@@ -1,7 +1,7 @@
 lista_processo = []
 operacoes_so = []
 
-ref_arquivo = open("modelo.txt","r")
+ref_arquivo = open("in.txt","r")
 
 #PEGAR QTD MULTIP
 multP = ref_arquivo.readline().split('=')[1]
