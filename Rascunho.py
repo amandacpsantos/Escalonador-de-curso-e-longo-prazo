@@ -10,6 +10,8 @@ arquivo = f(nameFileIn)
 
 tempoEventos = arquivo.getOperation()
 multProgramacao = int(arquivo.getMultProcess())
+
+# ORDENAÇÃO PELO NÚMERO DE CHEGADA
 listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=1)
 tempoEventos = arquivo.getOperation()
 
