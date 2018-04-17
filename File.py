@@ -37,6 +37,7 @@ class File(object):
                 byComma = byEqual.split(",")
 
                 listProcessUnit = []
+                listProcessUnit.append(processo.split('=')[0][-1])
                 for valor in byComma:
                     listProcessUnit.append(valor.split("-")[0])
                     if ";" in valor:

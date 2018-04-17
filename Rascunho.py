@@ -1,62 +1,68 @@
-lista_processo = []
-operacoes_so = []
+from File import File as f
+import copy as c
+import numpy as np
 
-ref_arquivo = open("in.txt","r")
+#nameFileIn ou nameFileOut pode ou não ser passado.
+#Caso não há, o nome padrão é in.txt e out.txt respectivamente.
 
-#PEGAR QTD MULTIP
-multP = ref_arquivo.readline().split('=')[1]
+nameFileIn = "in.txt"
+arquivo = f(nameFileIn)
 
+tempoEventos = arquivo.getOperation()
+multProgramacao = int(arquivo.getMultProcess())
+listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=1)
+tempoEventos = arquivo.getOperation()
 
-#SEPARAR PROCESSOS E OPERACOES
-linha = ref_arquivo.readline()
-while linha.__len__() != 2:
-    lista_processo.append(linha)
-    linha = ref_arquivo.readline()
-
-linha = ref_arquivo.readline()
-while linha:
-    operacoes_so.append(linha)
-    linha = ref_arquivo.readline()
-
-ref_arquivo.close()
-
-# -------------------------------------------------
-
-#LIMPAR DADOS
-lista_processo.pop(0)
-operacoes_so.pop(0)
+#--------------------------------------------------------
+#MEMÓRIA / PRONTO / EVENTOS / CPU / ES / INICIO / FIM /
+tabela=[
+        [[],[],"",0,[],0,0]                            ]
+#--------------------------------------------------------
 
 
 
-#TRATAR CADA PROCESSO
-lista_dados_processos = []
+numLinhaTabela = 0
 
-for processo in lista_processo:
-    limp1 = processo.split('=')[1]
+while listaDadosProcessos.__len__()!=0:
 
-    limp2 = limp1.split(",")
-    print(limp2.__str__())
+    #SE A MEMÓRIA ESTIVER MENOR QUE A MULTIPROGRAMAÇÃO
+    linhaTabela = c.deepcopy(tabela[numLinhaTabela])
 
-    listaProcessoUnico = []
+    if linhaTabela[0].__len__() < multProgramacao:
 
-    for valor in limp2:
-        print(valor)
-        listaProcessoUnico.append(valor.split("-")[0])
-        if ";" in valor:
-            listaProcessoUnico.append(valor[-2])
+        # CRIAR PROCESSO EM EVENTO:
+        linhaTabela[2] = "CPR-"+listaDadosProcessos[-1][0]
 
-    lista_dados_processos.append(listaProcessoUnico)
+        # ADD O TEMPO DE CRIAÇÃO
+        linhaTabela[-2] = tabela[numLinhaTabela][-1]
+        linhaTabela[-1] += int(tempoEventos[0])
+        tabela.append(linhaTabela)
+        numLinhaTabela += 1
 
-print(lista_dados_processos.__str__())
+        # CRIAR LINHA+1 COM O PROCESSO NA MEMÓRIA E NA FILA DE PRONTO
+        proxLinha = c.deepcopy(tabela[numLinhaTabela])
+        proxLinha[0].append(listaDadosProcessos[-1][0])
+        proxLinha[1].append(listaDadosProcessos[-1][0])
+        proxLinha[2] = ""
+        proxLinha[-2] = proxLinha[-1]
+        proxLinha[-1] += int(tempoEventos[0])
+
+        # ADD LINHA NA TABELA
+        tabela.append(proxLinha)
+        numLinhaTabela += 1
+        #print(tabela)
+
+        listaDadosProcessos.pop()
+
+
+    else:
+        print("Limite memória")
+        break
+
+print("\n------- TABELA -------")
+print(np.array(tabela))
 
 
 
 
-#TRATAR CADA OPERAÇÃO
-lista_dados_operacoes = []
-for operacao in  operacoes_so:
-    limp1 = operacao.split("=")[1]
-    lista_dados_operacoes.append(limp1[0])
 
-
-print(lista_dados_operacoes.__str__())
