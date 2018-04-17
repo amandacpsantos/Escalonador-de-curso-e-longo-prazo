@@ -16,13 +16,16 @@ tempoEventos = arquivo.getOperation()
 #--------------------------------------------------------
 #MEMÓRIA / PRONTO / EVENTOS / CPU / ES / INICIO / FIM /
 tabela=[
-        [[],[],"",0,[],0,0]                            ]
+        [[],[],"",0,[],0,0]
+                            ]
 #--------------------------------------------------------
-
 
 
 numLinhaTabela = 0
 
+
+#TODO
+# MUDAR listaDadosProcessos para numProcessos.
 while listaDadosProcessos.__len__()!=0:
 
     #SE A MEMÓRIA ESTIVER MENOR QUE A MULTIPROGRAMAÇÃO
@@ -56,6 +59,11 @@ while listaDadosProcessos.__len__()!=0:
 
 
     else:
+        #TODO
+        # Tratar trocar de contexto pra CPU
+        # Lista de espera
+        # Finalizar processos para o if reconhecer que há mais.
+        # tirar esse break horroroso que está aí só pra testar a primeira parte
         print("Limite memória")
         break
 
