@@ -15,27 +15,24 @@ multProgramacao = int(arquivo.getMultProcess())
 listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=1)
 
 
-# -------------------------------------------------------
 # TABELA CONSULTA DADOS E PICO CPU
 dictInfor = {}
 for processo in listaDadosProcessos:
     dictInfor[processo[0]] = ['0', processo[1],processo[2],processo[3] ]
-
 print(dictInfor)
 
 #--------------------------------------------------------
 #DISPOSIÇÃO DA TABELA
 #MEMÓRIA / PRONTO / EVENTOS / CPU / ES / INICIO / FIM /
 tabela=[
-        [[],[],"",-1,[],0,0]
+        [[],[],"",-1,{},0,0]
                             ]
 #--------------------------------------------------------
 
 numLinhaTabela = 0
-
 check = 0
 
-while listaDadosProcessos.__len__()!=0 and check < 10:
+while listaDadosProcessos.__len__()!=0 and check < 13:
 
     #TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
@@ -71,8 +68,8 @@ while listaDadosProcessos.__len__()!=0 and check < 10:
 
         listaDadosProcessos.pop()
 
-    #SE A CPU ESTIVER VAZIA
-    elif linhaTabela[3] == -1:
+    #SE A CPU ESTIVER VAZIA E A TIVER PROCESSO NA FILA DE PRONTOS
+    elif linhaTabela[3] == -1 and len(linhaTabela[1]) > 0:
 
         ### CRIAR ALOCAÇÃO DE PROCESSO NA CPU NA COLUNA EVENTO:
         processoAtual = linhaTabela[1].pop()
@@ -91,7 +88,9 @@ while listaDadosProcessos.__len__()!=0 and check < 10:
 
         #SE NÃO HOUVER PROCESSO EM ESPERA
         if len(proxLinha[4]) == 0:
+            proxLinha[2] = ""
             proxLinha[3] = processoAtual
+
             #VERICAR SE É O PRIMEIRO OU SEGUNDO PICO
             if dictInfor[proxLinha[3]][0] == "0": #SE FOR O PRIMEIRO PICO
                 dictInfor[proxLinha[3]][0] = "1"
@@ -117,6 +116,18 @@ while listaDadosProcessos.__len__()!=0 and check < 10:
             tabela.append(proxLinha)
             numLinhaTabela += 1
 
+        #SE HOUVER PROCESSO EM ESPERA
+        elif proxLinha[4].__len__() != 0:
+            pass
+
+    # SE A CPU ESTIVER CHEIA
+    elif linhaTabela[3] != -1:
+        processoAtual = linhaTabela[3]
+        linhaTabela[4][processoAtual] = linhaTabela[-1] + int(dictInfor[processoAtual][2])
+        linhaTabela[3] = -1
+        print(linhaTabela)
+        tabela.append(linhaTabela)
+        numLinhaTabela += 1
 
 
 
