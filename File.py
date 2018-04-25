@@ -103,7 +103,7 @@ class File(object):
 
     def __openFile(self, nameFile, mode):
         try:
-            self.arqObject = open(nameFile, mode)
+            self.arqObject = open(nameFile, mode, encoding="utf-8")
             return self.arqObject
         except FileNotFoundError:
             return None
