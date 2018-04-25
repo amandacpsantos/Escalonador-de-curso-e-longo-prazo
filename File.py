@@ -56,8 +56,6 @@ class File(object):
 
         if ref_file is not None:
             #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇA AS OPERAÇÕES
-            print(self.__pointerFile[0])
-            print(self.__pointerFile[1])
             ref_file.seek(self.__pointerFile[2])
 
             #PEGAR TODAS AS LINHAS REFERENTES AS OPERAÇÕES E SALVAR EM UMA LISTA
@@ -105,7 +103,7 @@ class File(object):
 
     def __openFile(self, nameFile, mode):
         try:
-            self.arqObject = open(nameFile, mode, encoding="utf-8")
+            self.arqObject = open(nameFile, mode)
             return self.arqObject
         except FileNotFoundError:
             return None
@@ -142,7 +140,6 @@ class File(object):
 
             self.__closeFile(ref_file)
 
-            print(listPointer)
             return listPointer
 
         return None

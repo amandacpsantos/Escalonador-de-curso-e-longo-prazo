@@ -1,6 +1,8 @@
+#https://github.com/amandacpsantos/Escalonador-de-curso-e-longo-prazo
+
 from File import File as f
-import copy as c
-import numpy as np
+
+#TESTE MAPEAMENTO ARQUIVO ENTRADA
 
 #nameFileIn ou nameFileOut pode ou não ser passado.
 #Caso não há, o nome padrão é in.txt e out.txt respectivamente.
@@ -8,9 +10,9 @@ import numpy as np
 nameFileIn = "in.txt"
 
 arquivo = f(nameFileIn)
-print(arquivo.getMultProcess())
-print(arquivo.getProcess())
-print(arquivo.getOperation())
+print("Multiprogramação: {}".format(arquivo.getMultProcess()))
+print("Lista de processos: {}".format(arquivo.getProcess()))
+print("Lista de eventos: {}".format(arquivo.getOperation()))
 arquivo.createOut()
 
 
