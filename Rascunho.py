@@ -2,6 +2,26 @@ from File import File as f
 import copy as c
 import numpy as np
 
+
+def cpr(linha, tabela, processo, tempo):
+    linha[2] = "CPR-" + processo
+
+    # ADD O TEMPO DE CRIAÇÃO
+    linha[-2] = linha[-1]
+    linha[-1] += int(tempo)
+    tabela.append(linha)
+    return tabela
+
+
+def tcp(linha, tabela, processo, tempo):
+    linha[2] = "TCP-" + processo
+
+    # ADD O TEMPO DE EVENTO TCP
+    linha[-2] = linha[-1]
+    linha[-1] += int(tempo)
+    tabela.append(linha)
+    return tabela
+
 #nameFileIn ou nameFileOut pode ou não ser passado.
 #Caso não há, o nome padrão é in.txt e out.txt respectivamente.
 
@@ -11,6 +31,7 @@ arquivo = f(nameFileIn)
 tempoEventos = arquivo.getOperation()
 multProgramacao = int(arquivo.getMultProcess())
 
+print(arquivo.getProcess())
 # ORDENAÇÃO PELO NÚMERO DE CHEGADA
 listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=True)
 
@@ -44,13 +65,9 @@ while len(listaID) !=0 and check < 13:
     if len(linhaTabela[0]) < multProgramacao:
 
         ### CRIAR PROCESSO NA COLUNA EVENTO:
-        linhaTabela[2] = "CPR-"+ listaID[-1]
-
-        # ADD O TEMPO DE CRIAÇÃO
-        linhaTabela[-2] = tabela[numLinhaTabela][-1]
-        linhaTabela[-1] += int(tempoEventos[0])
-        tabela.append(linhaTabela)
+        tabela = cpr(linhaTabela, tabela, listaID[-1], tempoEventos[0])
         numLinhaTabela += 1
+
 
         ### CRIAR LINHA+1 COM O PROCESSO NA MEMÓRIA E NA FILA DE PRONTO
         proxLinha = c.deepcopy(tabela[numLinhaTabela])
@@ -61,27 +78,18 @@ while len(listaID) !=0 and check < 13:
 
         proxLinha[2] = ""
 
-        proxLinha[-2] = proxLinha[-1]
-        proxLinha[-1] += int(tempoEventos[0])
-
         # ADD LINHA NA TABELA
         tabela.append(proxLinha)
         numLinhaTabela += 1
-        #print(tabela)
 
         listaID.pop()
 
-    #SE A CPU ESTIVER VAZIA E A TIVER PROCESSO NA FILA DE PRONTOS
+    #SE A CPU ESTIVER VAZIA E A TIVER PROCESSO NA FILA+ DE PRONTOS
     elif linhaTabela[3] == -1 and len(linhaTabela[1]) > 0:
 
-        ### CRIAR ALOCAÇÃO DE PROCESSO NA CPU NA COLUNA EVENTO:
+        ### ATUAL ALOCAÇÃO DE PROCESSO NA CPU NA COLUNA EVENTO:
         processoAtual = linhaTabela[1].pop()
-        linhaTabela[2] = "TCP-" + processoAtual
-
-        # ADD O TEMPO DE EVENTO TCP
-        linhaTabela[-2] = linhaTabela[-1]
-        linhaTabela[-1] += int(tempoEventos[1])
-        tabela.append(linhaTabela)
+        tabela = tcp(linhaTabela, tabela, processoAtual, tempoEventos[1])
         numLinhaTabela += 1
 
         proxLinha = c.deepcopy(tabela[numLinhaTabela])
