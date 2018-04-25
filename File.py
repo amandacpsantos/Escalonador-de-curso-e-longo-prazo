@@ -1,3 +1,5 @@
+#https://github.com/amandacpsantos/Escalonador-de-curso-e-longo-prazo
+
 class File(object):
 
     def __init__(self, nameFileIn="in.txt"):
@@ -55,8 +57,9 @@ class File(object):
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
         if ref_file is not None:
-            #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇA AS OPERAÇÕES
+            #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇAM AS "OPERAÇÕES"
             ref_file.seek(self.__pointerFile[2])
+            #print(self.__pointerFile[2])
 
             #PEGAR TODAS AS LINHAS REFERENTES AS OPERAÇÕES E SALVAR EM UMA LISTA
             line = ref_file.readline()
@@ -103,7 +106,7 @@ class File(object):
 
     def __openFile(self, nameFile, mode):
         try:
-            self.arqObject = open(nameFile, mode)
+            self.arqObject = open(nameFile, mode, encoding="utf-8")
             return self.arqObject
         except FileNotFoundError:
             return None
@@ -139,7 +142,6 @@ class File(object):
                 pointA = ref_file.tell()
 
             self.__closeFile(ref_file)
-
             return listPointer
 
         return None

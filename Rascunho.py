@@ -1,3 +1,5 @@
+#https://github.com/amandacpsantos/Escalonador-de-curso-e-longo-prazo
+
 from File import File as f
 import copy as c
 import numpy as np
@@ -32,9 +34,10 @@ multProgramacao = int(arquivo.getMultProcess())
 
 # ORDENAÇÃO PELO NÚMERO DE CHEGADA
 listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=True)
-print("------ PROCESSOS ORGANIZADOS PELA ORDEM DE CHEGADA ------")
+
+print("----------- FILA ORGANIZADA PELA ORDEM DE CHEGADA -----------")
 print(np.array(listaDadosProcessos))
-print("---------------------------------------------------------")
+print("\n")
 
 # TABELA CONSULTA DADOS E PICO CPU / LISTA DE IDS
 listaID = []
@@ -42,8 +45,10 @@ dictInfor = {}
 for processo in listaDadosProcessos:
     dictInfor[processo[0]] = ['0', processo[1],processo[2],processo[3] ]
     listaID.append(processo[0])
+
+print("------ DICIONÁRIO COM DADOS DOS PROCESSOS E PICO DA CPU ------")
 print(dictInfor)
-print(listaID)
+print("\n")
 
 #--------------------------------------------------------
 #DISPOSIÇÃO DA TABELA
@@ -136,7 +141,7 @@ while len(listaID) !=0 and check < 13:
         processoAtual = linhaTabela[3]
         linhaTabela[4][processoAtual] = linhaTabela[-1] + int(dictInfor[processoAtual][2])
         linhaTabela[3] = -1
-        print(linhaTabela)
+        #print(linhaTabela)
         tabela.append(linhaTabela)
         numLinhaTabela += 1
 
@@ -145,4 +150,4 @@ while len(listaID) !=0 and check < 13:
 
 print("\n------- TABELA -------")
 print(np.array(tabela))
-print(dictInfor)
+print("CONTINUA ...")
