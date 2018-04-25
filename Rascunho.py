@@ -12,14 +12,17 @@ tempoEventos = arquivo.getOperation()
 multProgramacao = int(arquivo.getMultProcess())
 
 # ORDENAÇÃO PELO NÚMERO DE CHEGADA
-listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=1)
+listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=True)
 
 
-# TABELA CONSULTA DADOS E PICO CPU
+# TABELA CONSULTA DADOS E PICO CPU / LISTA DE IDS
+listaID = []
 dictInfor = {}
 for processo in listaDadosProcessos:
     dictInfor[processo[0]] = ['0', processo[1],processo[2],processo[3] ]
+    listaID.append(processo[0])
 print(dictInfor)
+print(listaID)
 
 #--------------------------------------------------------
 #DISPOSIÇÃO DA TABELA
@@ -32,16 +35,16 @@ tabela=[
 numLinhaTabela = 0
 check = 0
 
-while listaDadosProcessos.__len__()!=0 and check < 13:
+while len(listaID) !=0 and check < 13:
 
     #TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
 
     #SE A MEMÓRIA ESTIVER MENOR QUE A MULTIPROGRAMAÇÃO
-    if linhaTabela[0].__len__() < multProgramacao:
+    if len(linhaTabela[0]) < multProgramacao:
 
         ### CRIAR PROCESSO NA COLUNA EVENTO:
-        linhaTabela[2] = "CPR-"+listaDadosProcessos[-1][0]
+        linhaTabela[2] = "CPR-"+ listaID[-1]
 
         # ADD O TEMPO DE CRIAÇÃO
         linhaTabela[-2] = tabela[numLinhaTabela][-1]
@@ -51,10 +54,10 @@ while listaDadosProcessos.__len__()!=0 and check < 13:
 
         ### CRIAR LINHA+1 COM O PROCESSO NA MEMÓRIA E NA FILA DE PRONTO
         proxLinha = c.deepcopy(tabela[numLinhaTabela])
-        proxLinha[0].append(listaDadosProcessos[-1][0])
+        proxLinha[0].append(listaID[-1])
 
         # INSERE NO [0] PARA USAR O .POP E PEGAR QUEM CHEGOU PRIMEIRO
-        proxLinha[1].insert(0,listaDadosProcessos[-1][0])
+        proxLinha[1].insert(0,listaID[-1])
 
         proxLinha[2] = ""
 
@@ -66,7 +69,7 @@ while listaDadosProcessos.__len__()!=0 and check < 13:
         numLinhaTabela += 1
         #print(tabela)
 
-        listaDadosProcessos.pop()
+        listaID.pop()
 
     #SE A CPU ESTIVER VAZIA E A TIVER PROCESSO NA FILA DE PRONTOS
     elif linhaTabela[3] == -1 and len(linhaTabela[1]) > 0:
@@ -136,4 +139,4 @@ while listaDadosProcessos.__len__()!=0 and check < 13:
 
 print("\n------- TABELA -------")
 print(np.array(tabela))
-print(dictInfor)
+#print(dictInfor)
