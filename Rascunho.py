@@ -12,7 +12,6 @@ def cpr(linha, tabela, processo, tempo):
     tabela.append(linha)
     return tabela
 
-
 def tcp(linha, tabela, processo, tempo):
     linha[2] = "TCP-" + processo
 
@@ -31,10 +30,11 @@ arquivo = f(nameFileIn)
 tempoEventos = arquivo.getOperation()
 multProgramacao = int(arquivo.getMultProcess())
 
-print(arquivo.getProcess())
 # ORDENAÇÃO PELO NÚMERO DE CHEGADA
 listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=True)
-
+print("------ PROCESSOS ORGANIZADOS PELA ORDEM DE CHEGADA ------")
+print(np.array(listaDadosProcessos))
+print("---------------------------------------------------------")
 
 # TABELA CONSULTA DADOS E PICO CPU / LISTA DE IDS
 listaID = []
@@ -140,11 +140,9 @@ while len(listaID) !=0 and check < 13:
         tabela.append(linhaTabela)
         numLinhaTabela += 1
 
-
-
     check += 1
 
 
 print("\n------- TABELA -------")
 print(np.array(tabela))
-#print(dictInfor)
+print(dictInfor)
