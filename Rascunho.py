@@ -68,7 +68,7 @@ tabela=[[[],      [],      "",      -1,   {},     0,      0]]
 numLinhaTabela = 0
 check = 0
 
-while len(listaID) !=0 and check < 20:
+while len(listaID) !=0 and check < 13:
 
     # TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
