@@ -168,4 +168,3 @@ while len(listaID) !=0 and check < 20:
 print("\n------- TABELA -------")
 print(np.array(tabela))
 print("CONTINUA ...")
-print(dictInfor)
