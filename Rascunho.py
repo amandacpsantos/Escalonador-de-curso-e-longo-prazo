@@ -59,18 +59,16 @@ print("------ DICIONÁRIO COM DADOS DOS PROCESSOS E PICO DA CPU ------")
 print(dictInfor)
 print("\n")
 
-#--------------------------------------------------------
-# DISPOSIÇÃO DA TABELA
-# MEMÓRIA / PRONTO / EVENTOS / CPU / ES / INICIO / FIM /
-tabela=[
-        [[],[],"",-1,{},0,0]
-                            ]
-#--------------------------------------------------------
+#------------------------------------------------------------
+# DISPOSIÇÃO DA TABELA                                      |
+#   | MEMÓRIA | PRONTO | EVENTOS | CPU | E/S | INICIO | FIM |
+tabela=[[[],      [],      "",      -1,   {},     0,      0]]
+#------------------------------------------------------------
 
 numLinhaTabela = 0
 check = 0
 
-while len(listaID) !=0 and check < 13:
+while len(listaID) !=0 and check < 20:
 
     # TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
@@ -117,7 +115,7 @@ while len(listaID) !=0 and check < 13:
             proxLinha[3] = processoAtual
 
             # VERICAR SE É O PRIMEIRO OU SEGUNDO PICO
-            if dictInfor[proxLinha[3]][0] == "0": #SE FOR O PRIMEIRO PICO
+            if dictInfor[proxLinha[3]][0] == "0":  # SE FOR O PRIMEIRO PICO
                 dictInfor[proxLinha[3]][0] = "1"
 
 
@@ -128,7 +126,7 @@ while len(listaID) !=0 and check < 13:
                 # ZERAR O TEMPO DO PRIMEIRO PICO
                 dictInfor[proxLinha[3]][1] = "0"
 
-            elif dictInfor[proxLinha[3]][0] == "1": #SE FOR O SEGUNDO PICO
+            elif dictInfor[proxLinha[3]][0] == "1": # SE FOR O SEGUNDO PICO
                 dictInfor[proxLinha[3]][0] = "2"
 
                 # ADD TEMPO DO SEGUNDO PICO
@@ -142,8 +140,18 @@ while len(listaID) !=0 and check < 13:
             numLinhaTabela += 1
 
         # SE HOUVER PROCESSO EM ESPERA
-        elif proxLinha[4].__len__() != 0:
+        elif len(proxLinha[4]) != 0:
             pass
+
+
+        # SE O PROCESSO TIVER TERMINADO
+        elif dictInfor[proxLinha[3]][0] == "2" and dictInfor[proxLinha[3]][3] == "0":
+            proxLinha[3] = processoAtual
+            tabela = tpr(linhaTabela, tabela, processoAtual, tempoEventos[1])
+            numLinhaTabela += 1
+
+            proxLinha = c.deepcopy(tabela[numLinhaTabela])
+
 
     # SE A CPU ESTIVER CHEIA
     elif linhaTabela[3] != -1:
@@ -160,3 +168,4 @@ while len(listaID) !=0 and check < 13:
 print("\n------- TABELA -------")
 print(np.array(tabela))
 print("CONTINUA ...")
+print(dictInfor)
