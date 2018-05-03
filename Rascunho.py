@@ -68,7 +68,7 @@ tabela=[[[],      [],      "",      -1,   {},     0,      0]]
 numLinhaTabela = 0
 check = 0
 
-while len(listaID) !=0 and check < 13:
+while len(listaID) !=0 and check < 15:
 
     # TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
@@ -141,7 +141,16 @@ while len(listaID) !=0 and check < 13:
 
         # SE HOUVER PROCESSO EM ESPERA
         elif len(proxLinha[4]) != 0:
-            pass
+            if len(proxLinha[4]) == 2:
+                # TIRAR PROCESSO QUE ESTÁ EM E/S E MANDAR PA CPU
+                pass
+            else:
+                proxLinha[2] = ""
+                proxLinha[3] = processoAtual
+                tabela = tcp(linhaTabela, tabela, processoAtual, tempoEventos[1])
+                numLinhaTabela += 1
+
+                tabela[numLinhaTabela] = proxLinha
 
 
         # SE O PROCESSO TIVER TERMINADO
