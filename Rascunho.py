@@ -145,6 +145,8 @@ while len(listaID) !=0 and check < 15:
                 # TIRAR PROCESSO QUE ESTÁ EM E/S E MANDAR PA CPU
                 pass
             else:
+                #linhaTabela[1].append(processoAtual)
+                # processoAtual = linhaTabela[1].pop()
                 proxLinha[2] = ""
                 proxLinha[3] = processoAtual
                 tabela = tcp(linhaTabela, tabela, processoAtual, tempoEventos[1])
