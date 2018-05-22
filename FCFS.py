@@ -33,10 +33,20 @@ def ioToProntos(processo, filaProntos):
 
 def tcp(filaProntos, tempoAtual, dictProcesso, cpu, io):
     tempoAtual = tempoAtual + 5
-    cpu[0] = filaProntos.pop()
-    cpu[1] = int(dictProcesso[cpu[0]][0]) + tempoAtual
+    #saber se processo vai entrar ou sair da cpu
+    if cpu[0] == 0:
+        cpu[0] = filaProntos.pop()
+        #saber qual pico da CPU está
+        if dictProcesso[cpu[0]][0] != 0 :
+            cpu[1] = int(dictProcesso[cpu[0]][0]) + tempoAtual
+            dictProcesso[cpu[0]][0] = 0
+        else:
+            cpu[1] = int(dictProcesso[cpu[0]][2]) + tempoAtual
+            dictProcesso[cpu[0]][2] = 0
 
-    print(cpu)
+    else:
+        io[cpu[0]] = dictProcesso[cpu[0]][1] + tempoAtual
+
 
     return tempoAtual
 
@@ -63,7 +73,16 @@ dictProcesso = {}
 for processo in listaProcesso:
    dictProcesso[processo[0]] = processo[1:]
 cont = 0
-while len(listaSJF) > 0 and cont<2:
+
+
+while len(listaSJF) > 0 and cont<4:
+
+    #verificar se há algum processo do io pronto para ir pra fila de prontos
+    if len(io) > 0:
+        for processo in io:
+            if io[processo] <= tempoAtual:
+                ioToProntos(io[processo], filaProntos)
+
     #verificar se a memoria tem espaço e realizar o cpr
     if len(filaMemoria) < multiprogramacao:
         tempoAtual = cpr(filaMemoria, filaProntos, listaSJF, tempoAtual)
@@ -82,9 +101,12 @@ while len(listaSJF) > 0 and cont<2:
             if len(filaProntos) > 0:
                 tempoAtual = tcp(filaProntos, tempoAtual, dictProcesso, cpu, io)
         else:
+            tempoAtual = cpu[1]
+
             pass
 
     cont += 1
     imprime(tempoAtual, filaMemoria, filaProntos, cpu, io)
 
 
+print(dictProcesso)
