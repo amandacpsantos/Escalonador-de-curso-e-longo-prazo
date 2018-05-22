@@ -7,16 +7,10 @@ listaEvento = arquivo.getOperation()
 multiprogramacao = int(arquivo.getMultProcess())
 
 
-def imprime(tempoAtual, filaMemoria, filaProntos):
-    print(str(tempoAtual) + " | " + str(filaMemoria) + " | " + str(filaProntos) + " | " )
+def imprime(tempoAtual, filaMemoria, filaProntos, cpu, io):
+    print(str(tempoAtual) + " | " + str(filaMemoria) + " | " + str(filaProntos) + " | EVENTO | " + str(cpu) + " | " + str(io)  )
 
-def checkTempoIo(io, cpu, tempoEvento = 0):
-    numtempo = 0
-    if (tempoEvento > 0):
-        numtempo = tempoEvento
-    else:
-        numtempo = cpu[1]
-
+def checkTempoIo(io, cpu, tempoAtual):
     for processo in io:
         #se o termino do tempo da CPU for maior que outro processo precisa sair da IO.
         if cpu[1] >= io[processo]:
@@ -26,7 +20,7 @@ def checkTempoIo(io, cpu, tempoEvento = 0):
 def cpr(filaMemoria, filaProntos, listaSJF, tempoAtual, tempoExec = int(listaEvento[0]) ):
     tempoAtual = tempoAtual + tempoExec
 
-    #TODO COLOCAR CHECK TEMPO IO
+    #TODO COLOCAR checkTempoIo
 
     processo = listaSJF.pop()[0]
     filaMemoria.insert(0,processo)
@@ -37,12 +31,14 @@ def cpr(filaMemoria, filaProntos, listaSJF, tempoAtual, tempoExec = int(listaEve
 def ioToProntos(processo, filaProntos):
     filaProntos.insert(0,processo)
 
-def tcp(filaProntos, tempoAtual, dictProcesso, cpu):
+def tcp(filaProntos, tempoAtual, dictProcesso, cpu, io):
     tempoAtual = tempoAtual + 5
-    resul = checkTempoIo(cpu, tempoAtual)
-    if resul == 0:
-        cpu[0] = filaProntos.pop()
-        cpu[1] = dictProcesso[cpu[0]][0] + tempoAtual
+    cpu[0] = filaProntos.pop()
+    cpu[1] = int(dictProcesso[cpu[0]][0]) + tempoAtual
+
+    print(cpu)
+
+    return tempoAtual
 
 def tpr(processo, tempoAtual = 0, tempoExec = listaEvento[2]):
     pass
@@ -55,9 +51,6 @@ evento = []
 io = {}
 listaSJF = []
 
-print(filaMemoria)
-print(filaProntos)
-print(tempoAtual)
 
 #adicionar o tempo total no final da lista de cada processo.
 for lista in listaProcesso:
@@ -69,23 +62,29 @@ listaSJF = sorted(listaProcesso, key=lambda sort: sort[5],reverse=True)
 dictProcesso = {}
 for processo in listaProcesso:
    dictProcesso[processo[0]] = processo[1:]
-
-while len(listaSJF) > 0:
+cont = 0
+while len(listaSJF) > 0 and cont<2:
     #verificar se a memoria tem espaço e realizar o cpr
-    if(len(filaMemoria) < multiprogramacao):
+    if len(filaMemoria) < multiprogramacao:
         tempoAtual = cpr(filaMemoria, filaProntos, listaSJF, tempoAtual)
 
-    #verificar se há processo para ir para a fila de prontos
-    if(len(io) > 0) :
-        processoFromIO = checkTempoIo(io, cpu)
-        #se houver processo com tempo menor que o que estiver na cpu
-        if(processoFromIO !=0):
-            ioToProntos(processoFromIO, filaProntos)
+    else:
 
-    #verificar se a cpu está
+        #verificar se há processo para ir para a fila de prontos
+        if len(io) > 0 :
+            processoFromIO = checkTempoIo(io, cpu)
+            #se houver processo com tempo menor que o que estiver na cpu
+            if(processoFromIO !=0):
+                ioToProntos(processoFromIO, filaProntos)
+
+        #verificar se a cpu está vazio ou cheia
+        if cpu[0] == 0:
+            if len(filaProntos) > 0:
+                tempoAtual = tcp(filaProntos, tempoAtual, dictProcesso, cpu, io)
+        else:
+            pass
+
+    cont += 1
+    imprime(tempoAtual, filaMemoria, filaProntos, cpu, io)
 
 
-    imprime(tempoAtual, filaMemoria, filaProntos)
-
-
-    break
