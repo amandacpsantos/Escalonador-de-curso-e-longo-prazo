@@ -1,26 +1,19 @@
-#https://github.com/amandacpsantos/Escalonador-de-curso-e-longo-prazo
-
 from File import File as f
+from PoliticaFCFS import PoliticaFCFS as pF
+from PoliticaPrioridade import PoliticaPrioridade as pP
 
-#TESTE MAPEAMENTO ARQUIVO ENTRADA
 
-#nameFileIn ou nameFileOut pode ou não ser passado.
-#Caso não há, o nome padrão é in.txt e out.txt respectivamente.
-
+# pegar informações do arquivo de entrada
 nameFileIn = "in.txt"
-
 arquivo = f(nameFileIn)
-print("Multiprogramação: {}".format(arquivo.getMultProcess()))
-print("Lista de processos: {}".format(arquivo.getProcess()))
-print("Lista de eventos: {}".format(arquivo.getOperation()))
-arquivo.createOut()
+listaProcesso = arquivo.getProcess()
+listaEvento = arquivo.getOperation()
+multiprogramacao = int(arquivo.getMultProcess())
 
+pol = pF(listaProcesso, listaEvento, multiprogramacao)
+pol.executa()
 
-#--------------------------------------------------------
-#MEMÓRIA / PRONTO / EVENTOS / CPU / ES / INICIO / FIM /
-tabela=[
-        [[],[],"",0,[],0,0]                            ]
-#--------------------------------------------------------
+print('\n\n-------------------\n\n')
 
-
-
+pol2 = pF(listaProcesso, listaEvento, multiprogramacao)
+pol2.executa()
