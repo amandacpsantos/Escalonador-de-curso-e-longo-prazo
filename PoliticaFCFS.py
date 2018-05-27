@@ -57,15 +57,15 @@ class PoliticaFCFS(object):
 
         # processo entrando na CPU
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
-            tempoAtual = self.tempoAtual + int(self.listaEvento[1])
+            self.tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
 
             # saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
-                self.cpu[1] = int(self.dictProcesso[self.cpu[0]][0]) + tempoAtual
+                self.cpu[1] = int(self.dictProcesso[self.cpu[0]][0]) + self.tempoAtual
                 self.dictProcesso[self.cpu[0]][0] = 0
             else:
-                self.cpu[1] = int(self.dictProcesso[self.cpu[0]][2]) + tempoAtual
+                self.cpu[1] = int(self.dictProcesso[self.cpu[0]][2]) + self.tempoAtual
                 self.dictProcesso[self.cpu[0]][2] = 0
 
         # processo saindo da CPU
@@ -78,7 +78,6 @@ class PoliticaFCFS(object):
                 self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + self.tempoAtual])
                 self.cpu[0] = 0
                 self.cpu[1] = 0
-
 
         self.tempoAtual = int(tempo)
 
@@ -123,7 +122,7 @@ class PoliticaFCFS(object):
                     processoFromIO = self.checkTempoIo()
 
                     # se houver processo com tempo menor que o que estiver na cpu
-                    if (processoFromIO[0] != 0):
+                    if processoFromIO[0] != 0:
                         self.ioToProntos(processoFromIO[0])
                         self.io.pop(processoFromIO[1])
 
@@ -138,6 +137,7 @@ class PoliticaFCFS(object):
             cont += 1
             self.__imprime(cont)
 
-            if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0: checkMemoria = 0
+            if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0:
+                checkMemoria = 0
 
         print(self.dictProcesso)

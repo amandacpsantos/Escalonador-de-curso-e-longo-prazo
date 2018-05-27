@@ -14,7 +14,6 @@ def cpr(linha, table, process, tempo):
     table.append(linha)
     return table
 
-
 def tcp(linha, table, process, tempo):
     linha[2] = "TCP-" + process
 
@@ -23,7 +22,6 @@ def tcp(linha, table, process, tempo):
     linha[-1] += int(tempo)
     table.append(linha)
     return table
-
 
 def tpr(linha, table, process, tempo):
     linha[2] = "TPR-" + process
@@ -34,9 +32,8 @@ def tpr(linha, table, process, tempo):
     table.append(linha)
     return table
 
-
-# nameFileIn ou nameFileOut pode ou não ser passado.
-# Caso não há, o nome padrão é in.txt e out.txt respectivamente.
+#nameFileIn ou nameFileOut pode ou não ser passado.
+#Caso não há, o nome padrão é in.txt e out.txt respectivamente.
 
 nameFileIn = "in.txt"
 arquivo = f(nameFileIn)
@@ -45,7 +42,7 @@ tempoEventos = arquivo.getOperation()
 multProgramacao = int(arquivo.getMultProcess())
 
 # ORDENAÇÃO PELO NÚMERO DE CHEGADA
-listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4], reverse=True)
+listaDadosProcessos = sorted(arquivo.getProcess(), key=lambda sort: sort[4],reverse=True)
 
 print("----------- FILA ORGANIZADA PELA ORDEM DE CHEGADA -----------")
 print(np.array(listaDadosProcessos))
@@ -55,23 +52,23 @@ print("\n")
 listaID = []
 dictInfor = {}
 for processo in listaDadosProcessos:
-    dictInfor[processo[0]] = ['0', processo[1], processo[2], processo[3]]
+    dictInfor[processo[0]] = ['0', processo[1],processo[2],processo[3] ]
     listaID.append(processo[0])
 
 print("------ DICIONÁRIO COM DADOS DOS PROCESSOS E PICO DA CPU ------")
 print(dictInfor)
 print("\n")
 
-# -------------------------------------------------------------
-# DISPOSIÇÃO DA TABELA                                        |
-#     | MEMÓRIA | PRONTO | EVENTOS | CPU | E/S | INICIO | FIM |
-tabela = [[[],      [],      "",      -1,   {},     0,      0]]
-# -------------------------------------------------------------
+#------------------------------------------------------------
+# DISPOSIÇÃO DA TABELA                                      |
+#   | MEMÓRIA | PRONTO | EVENTOS | CPU | E/S | INICIO | FIM |
+tabela=[[[],      [],      "",      -1,   {},     0,      0]]
+#------------------------------------------------------------
 
 numLinhaTabela = 0
 check = 0
 
-while len(listaID) != 0 and check < 15:
+while len(listaID) !=0 and check < 15:
 
     # TRABALHA EM CIMA SEMPRE DE UMA NOVA LINHA
     linhaTabela = c.deepcopy(tabela[numLinhaTabela])
@@ -79,16 +76,17 @@ while len(listaID) != 0 and check < 15:
     # SE A MEMÓRIA ESTIVER MENOR QUE A MULTIPROGRAMAÇÃO
     if len(linhaTabela[0]) < multProgramacao:
 
-        # ## CRIAR PROCESSO NA COLUNA EVENTO:
+        ### CRIAR PROCESSO NA COLUNA EVENTO:
         tabela = cpr(linhaTabela, tabela, listaID[-1], tempoEventos[0])
         numLinhaTabela += 1
 
-        # ## CRIAR LINHA+1 COM O PROCESSO NA MEMÓRIA E NA FILA DE PRONTO
+
+        ### CRIAR LINHA+1 COM O PROCESSO NA MEMÓRIA E NA FILA DE PRONTO
         proxLinha = c.deepcopy(tabela[numLinhaTabela])
         proxLinha[0].append(listaID[-1])
 
         # INSERE NO [0] PARA USAR O .POP E PEGAR QUEM CHEGOU PRIMEIRO
-        proxLinha[1].insert(0, listaID[-1])
+        proxLinha[1].insert(0,listaID[-1])
 
         proxLinha[2] = ""
 
@@ -101,7 +99,7 @@ while len(listaID) != 0 and check < 15:
     # SE A CPU ESTIVER VAZIA E JÁ TIVER PROCESSO NA FILA DE PRONTOS
     elif linhaTabela[3] == -1 and len(linhaTabela[1]) > 0:
 
-        # ## ATUAL ALOCAÇÃO DE PROCESSO NA CPU NA COLUNA EVENTO:
+        ### ATUAL ALOCAÇÃO DE PROCESSO NA CPU NA COLUNA EVENTO:
         processoAtual = linhaTabela[1].pop()
         tabela = tcp(linhaTabela, tabela, processoAtual, tempoEventos[1])
         numLinhaTabela += 1
@@ -120,6 +118,7 @@ while len(listaID) != 0 and check < 15:
             if dictInfor[proxLinha[3]][0] == "0":  # SE FOR O PRIMEIRO PICO
                 dictInfor[proxLinha[3]][0] = "1"
 
+
                 # ADD TEMPO DO PRIMEIRO PICO
                 proxLinha[-2] = proxLinha[-1]
                 proxLinha[-1] += int(dictInfor[proxLinha[3]][1])
@@ -127,7 +126,7 @@ while len(listaID) != 0 and check < 15:
                 # ZERAR O TEMPO DO PRIMEIRO PICO
                 dictInfor[proxLinha[3]][1] = "0"
 
-            elif dictInfor[proxLinha[3]][0] == "1":  # SE FOR O SEGUNDO PICO
+            elif dictInfor[proxLinha[3]][0] == "1": # SE FOR O SEGUNDO PICO
                 dictInfor[proxLinha[3]][0] = "2"
 
                 # ADD TEMPO DO SEGUNDO PICO
@@ -146,14 +145,13 @@ while len(listaID) != 0 and check < 15:
                 # TIRAR PROCESSO QUE ESTÁ EM E/S E MANDAR PA CPU
                 pass
             else:
-                # linhaTabela[1].append(processoAtual)
-                # processoAtual = linhaTabela[1].pop()
                 proxLinha[2] = ""
                 proxLinha[3] = processoAtual
                 tabela = tcp(linhaTabela, tabela, processoAtual, tempoEventos[1])
                 numLinhaTabela += 1
 
                 tabela[numLinhaTabela] = proxLinha
+
 
         # SE O PROCESSO TIVER TERMINADO
         elif dictInfor[proxLinha[3]][0] == "2" and dictInfor[proxLinha[3]][3] == "0":
@@ -162,6 +160,7 @@ while len(listaID) != 0 and check < 15:
             numLinhaTabela += 1
 
             proxLinha = c.deepcopy(tabela[numLinhaTabela])
+
 
     # SE A CPU ESTIVER CHEIA
     elif linhaTabela[3] != -1:

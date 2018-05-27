@@ -1,6 +1,7 @@
 from File import File as f
 from PoliticaFCFS import PoliticaFCFS as pF
 from PoliticaPrioridade import PoliticaPrioridade as pP
+from PoliticaRoundRobin import PoliticaRoundRobin as pRR
 
 
 # pegar informações do arquivo de entrada
@@ -15,5 +16,10 @@ pol.executa()
 
 print('\n\n-------------------\n\n')
 
-pol2 = pF(listaProcesso, listaEvento, multiprogramacao)
+pol2 = pP(listaProcesso, listaEvento, multiprogramacao)
 pol2.executa()
+
+print('\n\n-------------------\n\n')
+
+pol23 = pRR(listaProcesso, listaEvento, multiprogramacao)
+pol23.executa()
