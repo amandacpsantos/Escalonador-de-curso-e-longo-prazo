@@ -21,20 +21,21 @@ class File(object):
 
         if ref_file is not None:
 
-            # ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇAM OS PROCEDIMENTOS
+            #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇAM OS PROCEDIMENTOS
             ref_file.seek(self.__pointerFile[1])
 
-            # PEGAR TODAS AS LINHAS REFERENTES AOS PROCEDIMENTOS E SALVAR EM UMA LISTA
+            #PEGAR TODAS AS LINHAS REFERENTES AOS PROCEDIMENTOS E SALVAR EM UMA LISTA
             line = ref_file.readline()
             while line.__len__() != 2:
                 listProcess.append(line)
                 line = ref_file.readline()
 
-            # LIMPAR AS LINHAS REFERENTES AOS PROCEDIMENTOS SALVOS E SALVAR APENAS O VALORES EM UMA LISTA
+            #LIMPAR AS LINHAS REFERENTES AOS PROCEDIMENTOS SALVOS E SALVAR APENAS O VALORES EM UMA LISTA
             listDataProcess = []
             for processo in listProcess:
                 byEqual = processo.split('=')[1]
                 byComma = byEqual.split(",")
+
                 listProcessUnit = []
                 listProcessUnit.append(processo.split('=')[0][-1])
                 for valor in byComma:
@@ -54,16 +55,16 @@ class File(object):
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 
         if ref_file is not None:
-            # ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇA AS OPERAÇÕES
+            #ABRIR ARQUIVO E IR DIRETO AO PONTO QUE COMEÇA AS OPERAÇÕES
             ref_file.seek(self.__pointerFile[2])
 
-            # PEGAR TODAS AS LINHAS REFERENTES AS OPERAÇÕES E SALVAR EM UMA LISTA
+            #PEGAR TODAS AS LINHAS REFERENTES AS OPERAÇÕES E SALVAR EM UMA LISTA
             line = ref_file.readline()
             while line:
                 listOperation.append(line)
                 line = ref_file.readline()
 
-            # LIMPAR AS LINHAS REFERENTES AS OPERAÇÕES SALVAS E SALVAR APENAS O VALORES EM UMA LISTA
+            #LIMPAR AS LINHAS REFERENTES AS OPERAÇÕES SALVAS E SALVAR APENAS O VALORES EM UMA LISTA
             listDataOperation = []
             for operacao in listOperation:
                 limp1 = operacao.split("=")[1]
@@ -107,12 +108,11 @@ class File(object):
         except FileNotFoundError:
             return None
 
-    @staticmethod
-    def __closeFile(ref_file):
+    def __closeFile(self,ref_file):
         ref_file.close()
 
     def __searchPointerFile(self):
-        listPointer = []
+        listPointer= []
 
         ref_file = self.__openFile(self.__nameFileIn, 'r')
 

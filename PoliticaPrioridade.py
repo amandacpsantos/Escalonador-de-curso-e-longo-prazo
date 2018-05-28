@@ -1,19 +1,20 @@
 from PoliticaFCFS import PoliticaFCFS
 
-
 class PoliticaPrioridade(PoliticaFCFS):
 
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)
 
+
     def __ioOrdenadoPrioridade(self):
-        listaPrioridade = []
+        listaPrioridade =[]
 
         for processo in self.filaProntos:
             listaPrioridade.append([processo, self.dictProcesso.get(processo)[3]])
 
-        # organizar fila de prontos pela priopridade
+        #organizar fila de prontos pela priopridade
         listaPrioridade = sorted(listaPrioridade, key=lambda sort: sort[1], reverse=True)
+
 
         for processo in listaPrioridade:
             index = listaPrioridade.index(processo)
