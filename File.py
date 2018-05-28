@@ -75,31 +75,44 @@ class File(object):
 
         return None
 
-    def createOut(self, nameFileOut=None, listDada=[]):
+
+    def __formatString(self, string, lista):
+        #print(lista)
+        cont = 1
+        stringSave = string+'\n'
+        for processo in lista[1]:
+            stringSave += "-TE-P" + str(cont) + "=" + str(processo[5]) + "\n"
+            cont += 1
+        stringSave += '-TME=' + str(self.__countTime(lista[0])) + '\n'
+
+        return stringSave
+
+
+
+
+    def __countTime(self, dictTime):
+        time = 0
+        for key in dictTime:
+            time += dictTime[key]
+        return time/len(dictTime)
+
+
+    def createOut(self, nameFileOut=None, listData=[]):
         if nameFileOut is None:
             nameFileOut = self.__nameFileOut
 
-        ref_file = open(nameFileOut, 'w+')
+        if(len(listData) > 0):
+            string = ''
+            string += self.__formatString('FCFS', listData[0])
+            string += self.__formatString('Prioridade-CP', listData[1])
+            string += self.__formatString('Round-Robin(20)', listData[2])
 
-        ref_file.write("FCFS\n"
-                       "-TE-P1=\n"
-                       "-TE-P2=\n"
-                       "-TE-P3=\n"
-                       "-TE-P4=\n"
-                       "-TME=\n"
-                       "Prioridades-CP\n"
-                       "-TE-P1=\n"
-                       "-TE-P2=\n"
-                       "-TE-P3=\n"
-                       "-TE-P4=\n"
-                       "-TME=\n"
-                       "Round-Robin(20)\n"
-                       "-TE-P1=\n"
-                       "-TE-P2=\n"
-                       "-TE-P3=\n"
-                       "-TE-P4=\n"
-                       "-TME=\n")
-        ref_file.close()
+            print(string)
+
+            ref_file = open(nameFileOut, 'w+')
+
+            ref_file.write(string)
+            ref_file.close()
 
     def __openFile(self, nameFile, mode):
         try:

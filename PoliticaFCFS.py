@@ -14,6 +14,8 @@ class PoliticaFCFS(Politica):
             tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
 
+            self.checkTempoTpc(self.cpu[0], tempo)
+
             # saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
                 self.cpu[1] = int(self.dictProcesso[self.cpu[0]][0]) + tempoAtual

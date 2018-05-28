@@ -14,6 +14,8 @@ class PoliticaRoundRobin(Politica):
             self.tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
 
+            self.checkTempoTpc(self.cpu[0], tempo)
+
             # saber qual pico da CPU está
             if int(self.dictProcesso[self.cpu[0]][0]) != 0:
                 self.cpu[1] = 20 + self.tempoAtual

@@ -1,20 +1,28 @@
+import copy as c
+
 class Politica(object):
 
+
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
-        self.listaProcesso = listaProcesso
+        self.listaProcesso = c.deepcopy(listaProcesso)
         self.listaEvento = listaEvento
         self.multiprogramacao = multiprogramacao
         self.listaSJF = self.getListaSJF()
         self.dictProcesso = self.getDictProcesso()
+
         # -----------------------------------------------
+
         self.tempoAtual = 0
         self.filaMemoria = []
         self.filaProntos = []
         self.cpu = [0, 0]
         self.evento = []
         self.io = []
+        self.valuesTcp = {}
 
     def getListaSJF(self):
+
+
         # add ao processo o tempo total de CPU
         for lista in self.listaProcesso:
             lista.append(int(lista[1]) + int(lista[3]))
@@ -52,6 +60,17 @@ class Politica(object):
         self.filaMemoria.insert(0, processo)
         self.filaProntos.insert(0, processo)
 
+
+
+    def checkTempoTpc(self, processo, tempo):
+        #print(str(tempo) + " " + processo)
+        if processo in self.valuesTcp:
+            self.valuesTcp[processo] += tempo
+        else:
+            self.valuesTcp[processo] = tempo
+
+
+
     def tcp(self):
         tempo = self.tempoAtual + int(self.listaEvento[1])
 
@@ -59,6 +78,8 @@ class Politica(object):
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
             tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
+
+            self.checkTempoTpc(self.cpu[0], tempo)
 
             # saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
@@ -91,6 +112,10 @@ class Politica(object):
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
         # return filaProntos
+
+
+
+
 
     def executa(self):
 
@@ -136,8 +161,8 @@ class Politica(object):
                     self.tcp()
 
             cont += 1
-            self.__imprime(cont)
+            #self.__imprime(cont)
 
             if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0: checkMemoria = 0
 
-        print(self.dictProcesso)
+        return [self.valuesTcp , self.listaProcesso]
