@@ -7,14 +7,13 @@ class PoliticaRoundRobin(Politica):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)
 
     def tcp(self):
+
         tempo = self.tempoAtual + int(self.listaEvento[1])
 
         # processo entrando na CPU
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
             self.tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
-
-            self.checkTempoTpc(self.cpu[0], tempo)
 
             # saber qual pico da CPU está
             if int(self.dictProcesso[self.cpu[0]][0]) != 0:

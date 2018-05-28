@@ -10,7 +10,8 @@ listaEvento = arquivo.getOperation()
 multiprogramacao = int(arquivo.getMultProcess())
 
 
-
 app = a(listaProcesso, listaEvento, multiprogramacao)
-arquivo.createOut('out.txt', app.executa())
+a = app.executa()
+#print(a)
+arquivo.createOut('out.txt', a)
 

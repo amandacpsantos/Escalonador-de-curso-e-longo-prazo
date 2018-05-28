@@ -18,10 +18,9 @@ class Politica(object):
         self.cpu = [0, 0]
         self.evento = []
         self.io = []
-        self.valuesTcp = {}
+        self.values = {}
 
     def getListaSJF(self):
-
 
         # add ao processo o tempo total de CPU
         for lista in self.listaProcesso:
@@ -59,16 +58,15 @@ class Politica(object):
         processo = self.listaSJF.pop()[0]
         self.filaMemoria.insert(0, processo)
         self.filaProntos.insert(0, processo)
+        self.checkValues(processo, self.tempoAtual)
 
 
-
-    def checkTempoTpc(self, processo, tempo):
+    def checkValues(self, processo, tempo):
         #print(str(tempo) + " " + processo)
-        if processo in self.valuesTcp:
-            self.valuesTcp[processo] += tempo
+        if processo in self.values:
+            self.values[processo] -= tempo
         else:
-            self.valuesTcp[processo] = tempo
-
+            self.values[processo] = tempo
 
 
     def tcp(self):
@@ -78,8 +76,6 @@ class Politica(object):
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
             tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
-
-            self.checkTempoTpc(self.cpu[0], tempo)
 
             # saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
@@ -103,18 +99,19 @@ class Politica(object):
 
         self.tempoAtual = int(tempo)
 
+
     def tpr(self):
+        processo = self.cpu[0]
         self.cpu[0] = 0
         self.cpu[1] = 0
         self.filaMemoria.pop()
         self.tempoAtual = int(self.tempoAtual + int(self.listaEvento[2]))
+        self.checkValues(processo, self.tempoAtual)
+
 
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
         # return filaProntos
-
-
-
 
 
     def executa(self):
@@ -165,4 +162,4 @@ class Politica(object):
 
             if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0: checkMemoria = 0
 
-        return [self.valuesTcp , self.listaProcesso]
+        return [self.values]

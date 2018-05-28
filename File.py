@@ -76,38 +76,36 @@ class File(object):
         return None
 
 
-    def __formatString(self, string, lista):
-        #print(lista)
+    def __formatString(self, string, data):
+        numProcess = len(data)
         cont = 1
         stringSave = string+'\n'
-        for processo in lista[1]:
-            stringSave += "-TE-P" + str(cont) + "=" + str(processo[5]) + "\n"
+        for num in range(0, numProcess):
+            stringSave += "-TE-P" + str(cont) + "=" + str(abs(data[str(cont)])) + "\n"
             cont += 1
-        stringSave += '-TME=' + str(self.__countTime(lista[0])) + '\n'
+
+        stringSave += '-TME=' + str(self.__countTime(data)) + '\n'
 
         return stringSave
-
-
 
 
     def __countTime(self, dictTime):
         time = 0
         for key in dictTime:
-            time += dictTime[key]
+            time += abs(dictTime[key])
         return time/len(dictTime)
 
 
-    def createOut(self, nameFileOut=None, listData=[]):
+    def createOut(self, nameFileOut=None, data=[]):
         if nameFileOut is None:
             nameFileOut = self.__nameFileOut
 
-        if(len(listData) > 0):
+        if(len(data) > 0):
             string = ''
-            string += self.__formatString('FCFS', listData[0])
-            string += self.__formatString('Prioridade-CP', listData[1])
-            string += self.__formatString('Round-Robin(20)', listData[2])
+            string += self.__formatString('FCFS', data[0][0])
+            string += self.__formatString('Prioridade-CP', data[1][0])
+            string += self.__formatString('Round-Robin(20)', data[2][0])
 
-            print(string)
 
             ref_file = open(nameFileOut, 'w+')
 
