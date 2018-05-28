@@ -1,6 +1,6 @@
-from PoliticaFCFS import PoliticaFCFS
+from Politica import Politica
 
-class PoliticaPrioridade(PoliticaFCFS):
+class PoliticaPrioridade(Politica):
 
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)

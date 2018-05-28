@@ -1,7 +1,7 @@
-from PoliticaFCFS import PoliticaFCFS
+from Politica import Politica
 
 
-class PoliticaRoundRobin(PoliticaFCFS):
+class PoliticaRoundRobin(Politica):
 
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)
