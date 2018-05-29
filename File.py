@@ -105,7 +105,7 @@ class File(object):
             string += self.__formatString('FCFS', data[0][0])
             string += self.__formatString('Prioridade-CP', data[1][0])
             string += self.__formatString('Round-Robin(20)', data[2][0])
-
+            print(string)
 
             ref_file = open(nameFileOut, 'w+')
 
