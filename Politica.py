@@ -19,6 +19,7 @@ class Politica(object):
         self.evento = []
         self.io = []
         self.values = {}
+        self.cont = 0
 
     def getListaSJF(self):
 
@@ -37,8 +38,8 @@ class Politica(object):
             dictP[processo[0]] = processo[1:]
         return dictP
 
-    def __imprime(self, cont):
-        print(str(cont) + " : " +
+    def imprime(self):
+        print(str(self.cont) + " : " +
               str(self.tempoAtual) + " -- " +
               str(self.filaMemoria) + " -- " +
               str(self.filaProntos) + " -- EVENTO -- " +
@@ -49,7 +50,6 @@ class Politica(object):
             # se o termino do tempo da CPU for maior que outro processo precisa sair da IO.
             if self.cpu[1] >= processo[1]:
                 return [processo[0], self.io.index(processo)]
-
         return [0]
 
     def cpr(self):
@@ -101,23 +101,23 @@ class Politica(object):
 
 
     def tpr(self):
+        #zera a cpu, remove da memoria o processo e atualiza o tempo
         processo = self.cpu[0]
         self.cpu[0] = 0
         self.cpu[1] = 0
-        self.filaMemoria.pop()
+        self.filaMemoria.remove(processo)
         self.tempoAtual = int(self.tempoAtual + int(self.listaEvento[2]))
         self.checkValues(processo, self.tempoAtual)
 
 
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
-        # return filaProntos
 
 
     def executa(self):
 
         checkMemoria = 1
-        cont = 0
+
 
         while checkMemoria != 0:
 
@@ -126,13 +126,17 @@ class Politica(object):
 
                 self.io = sorted(self.io, key=lambda sort: sort[1], reverse=False)
 
+
+                #verificar se há algum processo já disponivel para fila de prontos
                 for processo in self.io:
                     if processo[1] <= self.tempoAtual:
                         self.ioToProntos(processo[0])
                         self.io.pop(self.io.index(processo))
 
+                #verificar se o processador e o cpu estão vazios para pular o tempo do proximo processo no io
                 if self.cpu[0] == 0 and len(self.filaProntos) == 0:
                     self.ioToProntos(self.io[0][0])
+                    self.tempoAtual = self.io[0][1]
                     self.io.pop(0)
 
             # verificar se a memoria tem espaço e realizar o cpr
@@ -157,8 +161,9 @@ class Politica(object):
                     self.tempoAtual = int(self.cpu[1])
                     self.tcp()
 
-            cont += 1
-            #self.__imprime(cont)
+            self.cont += 1
+
+            #self.imprime()
 
             if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0: checkMemoria = 0
 

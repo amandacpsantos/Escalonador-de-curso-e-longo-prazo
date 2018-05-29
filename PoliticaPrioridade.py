@@ -6,6 +6,29 @@ class PoliticaPrioridade(Politica):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)
 
 
+    def ioToProntos(self, processo):
+        self.filaProntos.insert(0, processo)
+        if self.cpu[0] != 0:
+            #verificar se há um processo na fila de prontos com maior prioridade
+
+            if self.__verifivarPreempcao() == True:
+
+                print(self.dictProcesso)
+                devolTempo = self.cpu[1] - self.tempoAtual
+
+                if self.dictProcesso[self.cpu[0]][2] == 0:
+                    self.dictProcesso[self.cpu[0]][2] = devolTempo
+                else:
+                    self.dictProcesso[self.cpu[0]][0] = devolTempo
+
+                #tcp para tirar da cpu
+                self.tcp()
+                #tcp para colocar na cpu
+                self.tcp()
+
+                print(self.dictProcesso)
+                self.cont += 1
+
     def __ioOrdenadoPrioridade(self):
         listaPrioridade =[]
 
@@ -21,6 +44,18 @@ class PoliticaPrioridade(Politica):
             listaPrioridade[index] = processo[0]
 
         self.filaProntos = listaPrioridade.copy()
+
+    def __verifivarPreempcao(self):
+        prioridadeCPU = self.dictProcesso[self.cpu[0]][3]
+        print('Proceso na cpu {} tem priopridade {}'.format(self.cpu[0],prioridadeCPU))
+
+        for processo in self.filaProntos:
+            print('Proceso {} tem priopridade {}'.format(processo, self.dictProcesso[processo][3]))
+
+            #verificar se o processo da fila de prontos tem maior prioridade que o da cpu
+            if self.dictProcesso[processo][3] < prioridadeCPU:
+                return True
+        return False
 
     def tcp(self):
         self.__ioOrdenadoPrioridade()
@@ -47,8 +82,10 @@ class PoliticaPrioridade(Politica):
                 # fazer TPR
                 self.tpr()
             else:
+                #passar o processo da cpu e gravar com o tempo que ele deve sair
                 self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + self.tempoAtual])
                 self.cpu[0] = 0
                 self.cpu[1] = 0
 
         self.tempoAtual = tempo
+
