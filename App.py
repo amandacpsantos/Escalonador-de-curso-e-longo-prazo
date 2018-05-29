@@ -3,6 +3,7 @@ from PoliticaPrioridade import PoliticaPrioridade as pP
 from PoliticaRoundRobin import PoliticaRoundRobin as pR
 import copy as c
 
+
 class App(object):
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
         self.listaValues = []
@@ -18,4 +19,3 @@ class App(object):
         return [pol1.executa(),
                 pol2.executa(),
                 pol3.executa()]
-

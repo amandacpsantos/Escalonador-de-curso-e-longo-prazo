@@ -1,5 +1,6 @@
 import copy as c
 
+
 class Politica(object):
 
 
@@ -23,16 +24,16 @@ class Politica(object):
 
     def getListaSJF(self):
 
-        # add ao processo o tempo total de CPU
+        # Add ao processo o tempo total de CPU
         for lista in self.listaProcesso:
             lista.append(int(lista[1]) + int(lista[3]))
 
-        # lista para escalonamento de longo prazo usando SJF
+        # Lista para escalonamento de longo prazo usando SJF
         listaSJF = sorted(self.listaProcesso, key=lambda sort: sort[5], reverse=True)
         return listaSJF
 
     def getDictProcesso(self):
-        # gerar um dicionario com todas informações sendo o numero do processo a chave
+        # Gerar um dicionario com todas informações sendo o numero do processo a chave
         dictP = {}
         for processo in self.listaProcesso:
             dictP[processo[0]] = processo[1:]
@@ -47,7 +48,7 @@ class Politica(object):
 
     def checkTempoIo(self):
         for processo in self.io:
-            # se o termino do tempo da CPU for maior que outro processo precisa sair da IO.
+            # Se o termino do tempo da CPU for maior que outro processo precisa sair da I/O.
             if self.cpu[1] >= processo[1]:
                 return [processo[0], self.io.index(processo)]
         return [0]
@@ -60,24 +61,21 @@ class Politica(object):
         self.filaProntos.insert(0, processo)
         self.checkValues(processo, self.tempoAtual)
 
-
     def checkValues(self, processo, tempo):
-        #print(str(tempo) + " " + processo)
         if processo in self.values:
             self.values[processo] -= tempo
         else:
             self.values[processo] = tempo
 
-
     def tcp(self):
         tempo = self.tempoAtual + int(self.listaEvento[1])
 
-        # processo entrando na CPU
+        # Processo entrando na CPU
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
             tempoAtual = self.tempoAtual + int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
 
-            # saber qual pico da CPU está
+            # Saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
                 self.cpu[1] = int(self.dictProcesso[self.cpu[0]][0]) + tempoAtual
                 self.dictProcesso[self.cpu[0]][0] = 0
@@ -85,23 +83,21 @@ class Politica(object):
                 self.cpu[1] = int(self.dictProcesso[self.cpu[0]][2]) + tempoAtual
                 self.dictProcesso[self.cpu[0]][2] = 0
 
-        # processo saindo da CPU
+        # Processo saindo da CPU
         else:
-            # se ja passou pelos dois picos
+            # Se ja passou pelos dois picos
             if self.dictProcesso[self.cpu[0]][0] == 0 and self.dictProcesso[self.cpu[0]][2] == 0:
-                # fazer TPR
+                # Fazer TPR
                 self.tpr()
             else:
                 self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + self.tempoAtual])
                 self.cpu[0] = 0
                 self.cpu[1] = 0
 
-
         self.tempoAtual = int(tempo)
 
-
     def tpr(self):
-        #zera a cpu, remove da memoria o processo e atualiza o tempo
+        # Zera a CPU, remove da memoria o processo e atualiza o tempo
         processo = self.cpu[0]
         self.cpu[0] = 0
         self.cpu[1] = 0
@@ -109,51 +105,45 @@ class Politica(object):
         self.tempoAtual = int(self.tempoAtual + int(self.listaEvento[2]))
         self.checkValues(processo, self.tempoAtual)
 
-
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
-
 
     def executa(self):
 
         checkMemoria = 1
 
-
         while checkMemoria != 0:
-
-            # verificar se há algum processo do io pronto para ir pra fila de prontos entre processos da cpu
+            # Verificar se há algum processo do I/O pronto para ir pra Fila de Prontos entre processos da CPU
             if len(self.io) > 0:
 
                 self.io = sorted(self.io, key=lambda sort: sort[1], reverse=False)
 
-
-                #verificar se há algum processo já disponivel para fila de prontos
+                # Verificar se há algum processo já disponivel para Fila de Prontos
                 for processo in self.io:
                     if processo[1] <= self.tempoAtual:
                         self.ioToProntos(processo[0])
                         self.io.pop(self.io.index(processo))
-
-                #verificar se o processador e o cpu estão vazios para pular o tempo do proximo processo no io
+                # Verificar se o processador e o CPU estão vazios para pular o tempo do proximo processo no I/O
                 if self.cpu[0] == 0 and len(self.filaProntos) == 0:
                     self.ioToProntos(self.io[0][0])
                     self.tempoAtual = self.io[0][1]
                     self.io.pop(0)
 
-            # verificar se a memoria tem espaço e realizar o cpr
+            # Verificar se a memoria tem espaço e realizar o CPR
             if len(self.filaMemoria) < self.multiprogramacao and len(self.listaSJF) > 0:
                 self.cpr()
 
             else:
-                # verificar se há processo para ir para a fila de prontos
+                # Verificar se há processo para ir para a Fila de Prontos
                 if len(self.io) > 0:
                     processoFromIO = self.checkTempoIo()
 
-                    # se houver processo com tempo menor que o que estiver na cpu
-                    if (processoFromIO[0] != 0):
+                    # Se houver processo com tempo menor que o que estiver na CPU
+                    if processoFromIO[0] != 0:
                         self.ioToProntos(processoFromIO[0])
                         self.io.pop(processoFromIO[1])
 
-                # verificar se a cpu está vazio ou cheia
+                # Verificar se a CPU está vazio ou cheia
                 if self.cpu[0] == 0:
                     if len(self.filaProntos) > 0:
                         self.tcp()
@@ -163,8 +153,7 @@ class Politica(object):
 
             self.cont += 1
 
-            #self.imprime()
-
-            if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0: checkMemoria = 0
+            if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0:
+                checkMemoria = 0
 
         return [self.values]

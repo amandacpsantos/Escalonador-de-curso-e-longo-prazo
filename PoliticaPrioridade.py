@@ -1,19 +1,18 @@
 from Politica import Politica
 
+
 class PoliticaPrioridade(Politica):
 
     def __init__(self, listaProcesso, listaEvento, multiprogramacao):
         super().__init__(listaProcesso, listaEvento, multiprogramacao)
 
-
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
         if self.cpu[0] != 0:
-            #verificar se há um processo na fila de prontos com maior prioridade
+            # Verificar se há um processo na fila de prontos com maior prioridade
 
-            if self.__verifivarPreempcao() == True:
+            if self.__verifivarPreempcao() is True:
 
-                #print(self.dictProcesso)
                 devolTempo = self.cpu[1] - self.tempoAtual
 
                 if self.dictProcesso[self.cpu[0]][2] == 0:
@@ -21,21 +20,20 @@ class PoliticaPrioridade(Politica):
                 else:
                     self.dictProcesso[self.cpu[0]][0] = devolTempo
 
-                #tcp para tirar da cpu
+                # TCP para tirar da CPU
                 self.tcp()
-                #tcp para colocar na cpu
+                # TCP para colocar na CPU
                 self.tcp()
 
-                #print(self.dictProcesso)
                 self.cont += 1
 
     def __ioOrdenadoPrioridade(self):
-        listaPrioridade =[]
+        listaPrioridade = []
 
         for processo in self.filaProntos:
             listaPrioridade.append([processo, self.dictProcesso.get(processo)[3]])
 
-        #organizar fila de prontos pela priopridade
+        # Organizar Fila de Prontos pela priopridade
         listaPrioridade = sorted(listaPrioridade, key=lambda sort: sort[1], reverse=True)
 
 
@@ -47,12 +45,10 @@ class PoliticaPrioridade(Politica):
 
     def __verifivarPreempcao(self):
         prioridadeCPU = self.dictProcesso[self.cpu[0]][3]
-        #print('Proceso na cpu {} tem priopridade {}'.format(self.cpu[0],prioridadeCPU))
 
         for processo in self.filaProntos:
-            #print('Proceso {} tem priopridade {}'.format(processo, self.dictProcesso[processo][3]))
 
-            #verificar se o processo da fila de prontos tem maior prioridade que o da cpu
+            # Verificar se o processo da Fila de Prontos tem maior prioridade que o da CPU
             if self.dictProcesso[processo][3] < prioridadeCPU:
                 return True
         return False
@@ -62,12 +58,12 @@ class PoliticaPrioridade(Politica):
 
         tempo = self.tempoAtual + int(self.listaEvento[1])
 
-        # processo entrando na CPU
+        # Processo entrando na CPU
         if self.cpu[0] == 0 and len(self.filaProntos) > 0:
             self.tempoAtual += int(self.listaEvento[1])
             self.cpu[0] = self.filaProntos.pop()
 
-            # saber qual pico da CPU está
+            # Saber qual pico da CPU está
             if self.dictProcesso[self.cpu[0]][0] != 0:
                 self.cpu[1] = int(self.dictProcesso[self.cpu[0]][0]) + self.tempoAtual
                 self.dictProcesso[self.cpu[0]][0] = 0
@@ -75,17 +71,16 @@ class PoliticaPrioridade(Politica):
                 self.cpu[1] = int(self.dictProcesso[self.cpu[0]][2]) + self.tempoAtual
                 self.dictProcesso[self.cpu[0]][2] = 0
 
-        # processo saindo da CPU
+        # Processo saindo da CPU
         else:
             # se ja passou pelos dois picos
             if self.dictProcesso[self.cpu[0]][0] == 0 and self.dictProcesso[self.cpu[0]][2] == 0:
                 # fazer TPR
                 self.tpr()
             else:
-                #passar o processo da cpu e gravar com o tempo que ele deve sair
+                # Passar o processo da CPU e gravar com o tempo que ele deve sair
                 self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + self.tempoAtual])
                 self.cpu[0] = 0
                 self.cpu[1] = 0
 
         self.tempoAtual = tempo
-
