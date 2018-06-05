@@ -30,7 +30,6 @@ class Politica(object):
             soma = sum(list(map(int, self.dictProcesso[key]))[0:3])
             listaSoma.append(soma)
 
-
         return listaSoma
 
 
@@ -72,8 +71,8 @@ class Politica(object):
         self.filaMemoria.insert(0, processo)
         self.filaProntos.insert(0, processo)
 
-    def checkValues(self, time):
-        self.values.append(time)
+    def checkValues(self, processo, time):
+        self.values.append([processo, time])
 
     def tcp(self):
         tempo = self.tempoAtual + int(self.listaEvento[1])
@@ -111,7 +110,7 @@ class Politica(object):
         self.cpu[1] = 0
         self.filaMemoria.remove(processo)
         tempo = int(self.tempoAtual + int(self.listaEvento[2]))
-        self.checkValues(tempo)
+        self.checkValues(processo,tempo)
         return tempo
 
     def ioToProntos(self, processo):
@@ -167,17 +166,21 @@ class Politica(object):
 
 
 
-        l = zip(self.values, self.somatorio)
+        lOrd = self.values = sorted(self.values, key=lambda sort: sort[0], reverse=False)
+
+        lValue = []
+
+        for lista in lOrd:
+            lValue.append(lista[1])
+
+        l = zip(lValue, self.somatorio)
+
         tEstimado = []
 
         for tupla in l:
-            tEstimado.append(tupla[0]-tupla[1])
+            tEstimado.append(tupla[0] - tupla[1])
 
-        #print(tEstimado)
-
-
-        return [tEstimado]
-
+        return tEstimado
 
 
 

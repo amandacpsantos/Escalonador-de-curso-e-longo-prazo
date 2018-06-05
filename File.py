@@ -103,9 +103,9 @@ class File(object):
 
         if len(data) > 0:
             string = ''
-            string += self.__formatString('FCFS', data[0][0])
-            string += self.__formatString('Prioridade-CP', data[1][0])
-            string += self.__formatString('Round-Robin(20)', data[2][0])
+            string += self.__formatString('FCFS', data[0])
+            string += self.__formatString('Prioridade-CP', data[1])
+            string += self.__formatString('Round-Robin(20)', data[2])
             print(string)
 
             ref_file = open(nameFileOut, 'w+', encoding="utf-8")

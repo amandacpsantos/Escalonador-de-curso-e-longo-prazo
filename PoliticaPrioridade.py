@@ -76,10 +76,10 @@ class PoliticaPrioridade(Politica):
             # se ja passou pelos dois picos
             if self.dictProcesso[self.cpu[0]][0] == 0 and self.dictProcesso[self.cpu[0]][2] == 0:
                 # fazer TPR
-                self.tpr()
+                tempo = self.tpr()
             else:
                 # Passar o processo da CPU e gravar com o tempo que ele deve sair
-                self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + self.tempoAtual])
+                self.io.append([self.cpu[0], int(self.dictProcesso[self.cpu[0]][1]) + tempo])
                 self.cpu[0] = 0
                 self.cpu[1] = 0
 
