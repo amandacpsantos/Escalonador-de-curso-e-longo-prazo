@@ -10,6 +10,7 @@ class Politica(object):
         self.multiprogramacao = multiprogramacao
         self.listaSJF = self.getListaSJF()
         self.dictProcesso = self.getDictProcesso()
+        self.somatorio = self.getSoma()
 
         # -----------------------------------------------
 
@@ -19,8 +20,19 @@ class Politica(object):
         self.cpu = [0, 0]
         self.evento = []
         self.io = []
-        self.values = {}
+        self.values = []
         self.cont = 0
+
+
+    def getSoma(self):
+        listaSoma = []
+        for key in self.dictProcesso:
+            soma = sum(list(map(int, self.dictProcesso[key]))[0:3])
+            listaSoma.append(soma)
+
+
+        return listaSoma
+
 
     def getListaSJF(self):
 
@@ -59,13 +71,9 @@ class Politica(object):
         processo = self.listaSJF.pop()[0]
         self.filaMemoria.insert(0, processo)
         self.filaProntos.insert(0, processo)
-        self.checkValues(processo, self.tempoAtual)
 
-    def checkValues(self, processo, tempo):
-        if processo in self.values:
-            self.values[processo] -= tempo
-        else:
-            self.values[processo] = tempo
+    def checkValues(self, time):
+        self.values.append(time)
 
     def tcp(self):
         tempo = self.tempoAtual + int(self.listaEvento[1])
@@ -102,8 +110,9 @@ class Politica(object):
         self.cpu[0] = 0
         self.cpu[1] = 0
         self.filaMemoria.remove(processo)
-        self.tempoAtual = int(self.tempoAtual + int(self.listaEvento[2]))
-        self.checkValues(processo, self.tempoAtual)
+        tempo = int(self.tempoAtual + int(self.listaEvento[2]))
+        self.checkValues(tempo)
+        return tempo
 
     def ioToProntos(self, processo):
         self.filaProntos.insert(0, processo)
@@ -156,4 +165,19 @@ class Politica(object):
             if len(self.filaMemoria) == 0 and len(self.io) == 0 and self.cpu[0] == 0:
                 checkMemoria = 0
 
-        return [self.values]
+
+
+        l = zip(self.values, self.somatorio)
+        tEstimado = []
+
+        for tupla in l:
+            tEstimado.append(tupla[0]-tupla[1])
+
+        #print(tEstimado)
+
+
+        return [tEstimado]
+
+
+
+

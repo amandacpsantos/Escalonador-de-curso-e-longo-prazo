@@ -77,23 +77,24 @@ class File(object):
 
     def __formatString(self, string, data):
         numProcess = len(data)
-        cont = 1
+
+        cont = 0
         stringSave = string+'\n'
         for num in range(0, numProcess):
-            stringSave += "-TE-P" + str(cont) + "=" + str(abs(data[str(cont)])) + "\n"
+            stringSave += "-TE-P" + str(cont+1) + "=" + str(data[cont]) + "\n"
             cont += 1
 
-        stringSave += '-TME=' + str(self.__countTime(data)) + '\n'
+        stringSave += '-TME=' + str(round(self.__countTime(data),2)) + '\n'
 
         return stringSave
 
 
     @staticmethod
-    def __countTime(dictTime):
-        time = 0
-        for key in dictTime:
-            time += abs(dictTime[key])
-        return time/len(dictTime)
+    def __countTime(data):
+        media = 0
+        for num in data:
+            media += num
+        return media/len(data)
 
 
     def createOut(self, nameFileOut=None, data=[]):
